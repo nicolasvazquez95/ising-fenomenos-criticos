@@ -10,6 +10,7 @@ using CSV
 using ArgParse
 using Base.Threads
 using Statistics
+using Dates
 
 # Cargamos el archivo de simulación base
 include(joinpath(@__DIR__, "runising.jl"))
@@ -102,6 +103,8 @@ end
 # Pipeline de producción
 # -------------------------------------------------------------------------
 args = parse_commandline()
+
+t_inicio = now()
 
 L = args["L"]
 N = L * L
@@ -213,6 +216,9 @@ sem = Channel{Nothing}(active_threads)
     end
 end
 
+t_fin = now()
+duracion_segundos = round((t_fin - t_inicio).value / 1000, digits=2)
+
 # -------------------------------------------------------------------------
 # Armado de DataFrame y guardado
 # -------------------------------------------------------------------------
@@ -275,6 +281,10 @@ open(ruta_meta, "w") do io
     println(io, "="^65)
     println(io, " METADATOS DE SIMULACION - ISING 2D (PRODUCCION / EQUILIBRIO)")
     println(io, "="^65)
+    println(io, "Fecha y hora de inicio   : $(Dates.format(t_inicio, "yyyy-mm-dd HH:MM:SS"))")
+    println(io, "Fecha y hora de fin      : $(Dates.format(t_fin, "yyyy-mm-dd HH:MM:SS"))")
+    println(io, "Tiempo total de corrida  : $(duracion_segundos) s")
+    println(io, "-"^65)
     println(io, "L (tamano de red)           : $L ($N espines)")
     println(io, "T_min                       : $T_min")
     println(io, "T_max                       : $T_max")

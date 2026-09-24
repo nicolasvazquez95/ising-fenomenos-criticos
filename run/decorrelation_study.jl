@@ -10,6 +10,7 @@ using DataFrames
 using CSV
 using ArgParse
 using Base.Threads
+using Dates
 
 # Incluimos las funciones del script base
 include(joinpath(@__DIR__, "runising.jl"))
@@ -107,6 +108,9 @@ if requested_threads > nthreads()
     @warn "Se solicitaron $requested_threads hilos, pero Julia se inicio con $(nthreads()). Ejecuta Julia con 'julia -t $requested_threads ...' para habilitarlos todos. Usando $(nthreads()) hilos."
 end
 
+# Al inicio de la simulación podés tomar:
+t_inicio = now()
+
 J = 1.0
 h = 0.0
 mcs_between = 1
@@ -162,6 +166,9 @@ sem = Channel{Nothing}(active_threads)
         end
     end
 end
+
+t_fin = now()
+duracion_segundos = round((t_fin - t_inicio).value / 1000, digits=2)
 
 df_decorr = DataFrame(
     T = temperaturas,
@@ -268,6 +275,10 @@ open(ruta_meta, "w") do io
     println(io, "="^60)
     println(io, " METADATOS DE SIMULACION - ISING 2D (DECORRELACION)")
     println(io, "="^60)
+    println(io, "Fecha y hora de inicio   : $(Dates.format(t_inicio, "yyyy-mm-dd HH:MM:SS"))")
+    println(io, "Fecha y hora de fin      : $(Dates.format(t_fin, "yyyy-mm-dd HH:MM:SS"))")
+    println(io, "Tiempo total de corrida  : $(duracion_segundos) s")
+    println(io, "-"^60)
     println(io, "L (tamano de red)       : $L ($(L*L) espines)")
     println(io, "T_min                   : $T_min")
     println(io, "T_max                   : $T_max")
