@@ -265,3 +265,33 @@ fig_termo = plot(p1, p2, p3, p4, layout=(2, 2), size=(900, 700), margin=5Plots.m
 ruta_fig = joinpath(dir_data, "equilibrium_observables_L$(L).png")
 savefig(fig_termo, ruta_fig)
 println("Gráficos exportados a: $ruta_fig")
+
+# -------------------------------------------------------------------------
+# Exportación de metadatos de la corrida de producción
+# -------------------------------------------------------------------------
+ruta_meta = joinpath(dir_data, "metadata_equilibrium_L$(L).txt")
+
+open(ruta_meta, "w") do io
+    println(io, "="^65)
+    println(io, " METADATOS DE SIMULACION - ISING 2D (PRODUCCION / EQUILIBRIO)")
+    println(io, "="^65)
+    println(io, "L (tamano de red)           : $L ($N espines)")
+    println(io, "T_min                       : $T_min")
+    println(io, "T_max                       : $T_max")
+    println(io, "nT (puntos de T)            : $nT")
+    println(io, "n_samples (por T)           : $n_samples")
+    println(io, "master_seed                 : $master_seed")
+    println(io, "J                           : $J")
+    println(io, "h                           : $h")
+    println(io, "Politica decorrelacion (dt) : max(2, ceil(2.5 * tau))")
+    println(io, "Politica termalizacion      : max(500, ceil(10.0 * tau))")
+    println(io, "Condicion inicial           : Cold start (s = 1)")
+    println(io, "Hilos solicitados           : $requested_threads")
+    println(io, "Hilos efectivos usados      : $active_threads")
+    println(io, "-"^65)
+    println(io, "Rango sample_interval [MCS] : [$(minimum(sample_int_vec)), $(maximum(sample_int_vec))]")
+    println(io, "Rango n_therm [MCS]         : [$(minimum(n_therm_vec)), $(maximum(n_therm_vec))]")
+    println(io, "="^65)
+end
+
+println("Metadatos exportados a: $ruta_meta")

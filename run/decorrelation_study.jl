@@ -258,3 +258,32 @@ fig_final = plot(p1, p2, layout = (1, 2), size = (1000, 450), margin = 5mm, dpi 
 ruta_fig = joinpath(@__DIR__, "data/decorrelation_L$(L)_nT$(nT).png")
 savefig(fig_final, ruta_fig)
 println("Graficos guardados en: $ruta_fig")
+
+# -------------------------------------------------------------------------
+# Exportación de metadatos de la simulación
+# -------------------------------------------------------------------------
+ruta_meta = joinpath(@__DIR__, "data/metadata_decorrelations_L$(L)_nT$(nT).txt")
+
+open(ruta_meta, "w") do io
+    println(io, "="^60)
+    println(io, " METADATOS DE SIMULACION - ISING 2D (DECORRELACION)")
+    println(io, "="^60)
+    println(io, "L (tamano de red)       : $L ($(L*L) espines)")
+    println(io, "T_min                   : $T_min")
+    println(io, "T_max                   : $T_max")
+    println(io, "nT (puntos de T)        : $nT")
+    println(io, "snapshots               : $n_snapshots")
+    println(io, "descarte (termalizado)  : $(min(5000, div(n_snapshots, 3)))")
+    println(io, "max_lag                 : $max_lag")
+    println(io, "mcs_between             : $mcs_between")
+    println(io, "master_seed             : $master_seed")
+    println(io, "J                       : $J")
+    println(io, "h                       : $h")
+    println(io, "Hilos solicitados       : $requested_threads")
+    println(io, "Hilos efectivos usados  : $active_threads")
+    println(io, "-"^60)
+    println(io, "Pico maximo tau_int(|m|): $(round(tau_pico, digits=2)) MCS a T = $(round(T_pico, digits=3))")
+    println(io, "="^60)
+end
+
+println("Metadatos guardados en: $ruta_meta")
