@@ -1,0 +1,24 @@
+=================================================================
+ METADATOS DE SIMULACION - ISING 2D (PRODUCCION / EQUILIBRIO)
+=================================================================
+Fecha y hora de inicio   : 2026-09-24 21:06:02
+Fecha y hora de fin      : 2026-09-24 21:06:32
+Tiempo total de corrida  : 30.59 s
+-----------------------------------------------------------------
+L (tamano de red)           : 32 (1024 espines)
+T_min                       : 1.75
+T_max                       : 3.0
+nT (puntos de T)            : 96
+n_samples (por T)           : 5000
+master_seed                 : 2026
+J                           : 1.0
+h                           : 0.0
+Politica decorrelacion (dt) : max(2, ceil(2.5 * tau))
+Politica termalizacion      : max(500, ceil(10.0 * tau))
+Condicion inicial           : Cold start (s = 1)
+Hilos solicitados           : 96
+Hilos efectivos usados      : 96
+-----------------------------------------------------------------
+Rango sample_interval [MCS] : [8, 498]
+Rango n_therm [MCS]         : [500, 1991]
+=================================================================

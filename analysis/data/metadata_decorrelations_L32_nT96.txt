@@ -1,0 +1,23 @@
+============================================================
+ METADATOS DE SIMULACION - ISING 2D (DECORRELACION)
+============================================================
+Fecha y hora de inicio   : 2026-09-24 17:41:50
+Fecha y hora de fin      : 2026-09-24 17:56:51
+Tiempo total de corrida  : 901.15 s
+------------------------------------------------------------
+L (tamano de red)       : 32 (1024 espines)
+T_min                   : 1.75
+T_max                   : 2.75
+nT (puntos de T)        : 96
+snapshots               : 3000000
+descarte (termalizado)  : 5000
+max_lag                 : 4500
+mcs_between             : 1
+master_seed             : 42
+J                       : 1.0
+h                       : 0.0
+Hilos solicitados       : 96
+Hilos efectivos usados  : 96
+------------------------------------------------------------
+Pico maximo tau_int(|m|): 283.53 MCS a T = 2.297
+============================================================
