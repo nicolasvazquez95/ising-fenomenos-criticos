@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,12pt]{article}
 
 % -------------------------------------------------------------------------
 % Paquetes
@@ -13,7 +13,12 @@
 \usepackage{subcaption}
 \usepackage{booktabs}
 \usepackage{xcolor}
+\usepackage{palatino}
 \usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+
+%Add bibliography
+\usepackage[sorting=none,style=phys]{biblatex}
+\addbibresource{refs.bib}
 
 % Figuras generadas por los scripts de analisis y de corridas
 \graphicspath{{../analysis/output/}{../run/data/}}
@@ -28,44 +33,96 @@
 % -------------------------------------------------------------------------
 \title{Simulaciones de Monte Carlo del modelo de Ising en $d = 2$\\[0.3em]
 \large Elementos de la Teoría de los Fenómenos Críticos --- Guía N$^\circ$ 4}
-\author{\todo{Nombre}}
+\author{Nicolás Vazquez}
 \date{\today}
 
 \begin{document}
 \maketitle
 
-\begin{abstract}
-\todo{Resumen: modelo, método, tamaños simulados, estimaciones de $\Tc$ y de los exponentes críticos, comparación con los resultados exactos.}
-\end{abstract}
+%\tableofcontents
 
 % =========================================================================
 \section{Introducción}
 % =========================================================================
-\todo{Modelo de Ising, transición ferromagnética en $d = 2$, solución de Onsager, escalamiento de tamaño finito.}
+Dentro de la teoría del magnetismo y de los fenómenos críticos, el modelo de Ising es un sistema paradigmático \cite{tauberCriticalDynamicsField2014}.
+Además de su importancia histórica, es un modelo simple que exhibe un comportamiento crítico que queda por fuera de las teorías ``clásicas'' de campo medio (como la teoría de Landau o Curie--Weiss) \cite{salinasIntroductionStatisticalPhysics2001}.
 
-% =========================================================================
-\section{Susceptibilidad y calor específico como fluctuaciones}
-\label{sec:fluctuaciones}
-% =========================================================================
-\todo{Problema 1: derivación de}
-\begin{align}
-  \chi &= \frac{\partial \expval{m}}{\partial B} = \beta N \left[ \expval{m^2} - \expval{m}^2 \right], \\
-  C &= -T \frac{\partial^2 f}{\partial T^2} = \frac{\beta^2}{N} \left[ \expval{H^2} - \expval{H}^2 \right].
-\end{align}
+El modelo de Ising en dos dimensiones, con su transición de fase de segundo orden, es el modelo mínimo que caracteriza la transición paramagnética--ferromagnética de muchos materiales magnéticos \cite{blundellMagnetismCondensedMatter2023}. 
+Sin embargo, en sentido estricto la transición de fase solo se da en el límite termodinámico: en un sistema finito las funciones termodinámicas son analíticas y no presentan singularidades \cite{goldenfeldLecturesPhaseTransitions2018}.
+Si bien el modelo de Ising en dos dimensiones fue resuelto en este límite por Onsager \cite{Onsager1944}, la gran mayoría de los sistemas físicos no son tratables analíticamente, y por lo tanto se hace necesario recurrir a métodos numéricos para estudiar sus propiedades.
 
+Las técnicas de Monte Carlo permiten hacer simulaciones numéricas de este sistema y de gran variedad de modelos afines, y son una herramienta fundamental para estudiar la física de los fenómenos críticos y del magnetismo en general \cite{landauGuideMonteCarlo2020}. 
+Estos métodos, basados en la mecánica estadística de equilibrio y la teoría de los fenómenos críticos ---particularmente la teoría de escala y el análisis de tamaño finito \cite{cardy1988finite}---, permiten extrapolar los resultados obtenidos en sistemas finitos, como los de toda simulación, a la región crítica del límite termodinámico.
+
+En este informe se presentan los resultados de simulaciones de Monte Carlo del modelo de Ising en la red cuadrada de dos dimensiones, con el objetivo de estudiar su comportamiento crítico: estimar la temperatura crítica y los exponentes críticos del modelo, y compararlos con los valores exactos conocidos.
 % =========================================================================
 \section{Modelo y método}
 \label{sec:metodo}
 % =========================================================================
-
+En esta sección se describen brevemente la teoría del modelo de Ising, el algoritmo de Monte Carlo utilizado para simularlo, y los observables que se calcularon a partir de las simulaciones.
 \subsection{Modelo}
+El sistema que describe el modelo de Ising en dimensión $d=2$ consiste en un conjunto de espines $S_i = \pm 1$ ubicados en los sitios de una red cuadrada bidimensional de tamaño $L \times L$ (es decir $N = L^2$ sitios).
+Estos espines interactúan con sus vecinos más cercanos (4 vecinos en la red cuadrada) y con un campo magnético externo $B$.
+Sin entrar en detalles del fundamento detrás de cada término, la energía del sistema queda descrita por el Hamiltoniano \cite{salinasIntroductionStatisticalPhysics2001}
 \begin{equation}
   H = -J \sum_{\langle i,j \rangle} S_i S_j - B \sum_i S_i ,
 \end{equation}
-red cuadrada de $L \times L$ sitios con condiciones de contorno periódicas, $k_B = 1$.
+donde $J$ es la constante de acoplamiento entre espines vecinos y $\langle i,j \rangle$ denota la suma sobre pares de sitios vecinos.
+En el modelo de Ising ferromagnético, $J > 0$.
+
+Lenz propuso este modelo en 1920 para estudiar el comportamiento de materiales ferromagnéticos, y su estudiante Ising lo resolvió en una dimensión en 1925, encontrando que no se da una transición de fase a temperatura finita. 
+En cambio, a partir de la dimensión $d=2$ el modelo presenta orden ferromagnético a temperaturas suficientemente bajas y, por lo tanto, una transición de fase a una temperatura crítica $\Tc$ finita, algo demostrado por primera vez por Peierls en 1936 \cite{deoliveiraOriginsIsingModel2025}.
+
+En un trabajo posterior, Onsager fue quien obtuvo la solución exacta del modelo de Ising en dos dimensiones en el límite termodinámico, que muestra que la transición es continua. 
+Mencionamos debajo algunos resultados de la solución exacta que serán útiles para comparar con los resultados de las simulaciones.
+
+\subsubsection{La solución exacta de Onsager}
+Onsager resolvió el modelo a campo nulo mediante el método de la matriz de transferencia \cite{Onsager1944}.
+La temperatura crítica queda determinada por la condición $\sinh(2J/k_B\Tc) = 1$, es decir
+\begin{equation}
+  \frac{k_B \Tc}{J} = \frac{2}{\ln\left(1 + \sqrt{2}\right)} \simeq 2.269185 .
+\end{equation}
+La magnetización espontánea, calculada posteriormente por Yang \cite{yangSpontaneousMagnetizationTwoDimensional1952}, es
+\begin{equation}
+  \expval{m} = \left[ 1 - \sinh^{-4}\left( \frac{2J}{k_B T} \right) \right]^{1/8}, \qquad T < \Tc ,
+\end{equation}
+y se anula de forma continua en $\Tc$.
+Por su parte, el calor específico diverge logarítmicamente,
+\begin{equation}
+  \frac{C}{k_B} \simeq -\frac{8}{\pi} \left( \frac{J}{k_B \Tc} \right)^2 \ln\left| 1 - \frac{T}{\Tc} \right| ,
+\end{equation}
+por lo que $\alpha = 0$.
+A partir de estos resultados y de la función de correlación exacta se obtienen los exponentes críticos
+\begin{equation}
+  \alpha = 0 \ (\text{log}), \quad \beta = \tfrac{1}{8}, \quad \gamma = \tfrac{7}{4}, \quad \nu = 1, \quad \eta = \tfrac{1}{4}, \quad \delta = 15 ,
+\end{equation}
+muy distintos de los de campo medio ($\beta = 1/2$, $\gamma = 1$, $\nu = 1/2$, $\eta = 0$, $\delta = 3$), y que definen la clase de universalidad de Ising en $d = 2$.
+Estos son los valores con los que compararemos las estimaciones numéricas de la Sección~\ref{sec:resultados}.
 
 \subsection{Algoritmo de Monte Carlo}
-\todo{Baño térmico (heat bath) con elección aleatoria de sitio; probabilidad de $S_i = +1$; relación con Metropolis (mismo equilibrio, distinta dinámica); definición de MCS.}
+\label{sec:algoritmo}
+Para muestrear la distribución de Boltzmann $P(\{S\}) \propto e^{-\beta H}$ se utilizó una dinámica de un solo espín con el algoritmo de baño térmico (\emph{heat bath}), también conocido como dinámica de Glauber \cite{landauGuideMonteCarlo2020}.
+En cada paso elemental se elige un sitio $i$ al azar y se le asigna un nuevo valor, independiente del anterior, según la distribución de equilibrio condicionada a la configuración de sus vecinos:
+\begin{equation}
+  P(S_i = +1) = \frac{1}{1 + e^{-2\beta h_i}} , \qquad h_i = J \sum_{j \in \mathrm{v}(i)} S_j + B ,
+  \label{eq:heatbath}
+\end{equation}
+donde $\mathrm{v}(i)$ son los 4 primeros vecinos de $i$.
+Como la suma de los vecinos solo puede tomar los valores $0, \pm 2, \pm 4$, estas probabilidades se calculan una única vez para cada temperatura y se guardan en una tabla.
+Se define un paso de Monte Carlo (MCS) como $N = L^2$ de estos intentos, de modo que en promedio cada espín es visitado una vez por MCS.
+En todas las simulaciones se usaron condiciones de contorno periódicas y unidades $J = k_B = 1$.
+
+El enunciado propone el algoritmo de Metropolis, en el que se propone invertir el espín y se acepta el cambio con probabilidad $\min(1, e^{-\beta \Delta E})$.
+Ambos algoritmos satisfacen balance detallado respecto de la misma distribución,
+\begin{equation}
+  \frac{W(S_i \to -S_i)}{W(-S_i \to S_i)} = e^{-\beta \Delta E} ,
+\end{equation}
+por lo que conducen a los mismos promedios de equilibrio, y en consecuencia a las mismas estimaciones de $\Tc$ y de los exponentes estáticos.
+Lo que cambia es la dinámica: como la probabilidad de cambio del baño térmico es siempre menor o igual que la de Metropolis, los tiempos de autocorrelación son algo mayores.
+Sin embargo, es conocido que ambas dinámicas pertenecen a la misma clase de universalidad dinámica (modelo A), con exponente $z \simeq 2.17$ \cite{tauberCriticalDynamicsField2014}.
+
+Por otra parte, la dinámica de Glauber tiene la ventaja de admitir una interpretación física directa: fue introducida como una ecuación maestra con tasas de transición que modelan el acoplamiento de los espines con un baño térmico \cite{glauberTimeDependentStatisticsIsing1963}, de modo que el tiempo medido en MCS puede interpretarse como un tiempo físico de relajación hacia el equilibrio.
+En una dimensión este modelo es exactamente soluble, y la evolución de $\expval{S_i}$ obedece una ecuación de difusión discreta.
 
 \subsection{Tiempos de autocorrelación y protocolo de muestreo}
 \todo{Estimación de $\tau_\mathrm{int}$ con ventana autoconsistente; ralentización crítica; termalización $\max(500, \lceil 10\tau \rceil)$ y separación entre muestras $\max(2, \lceil 2.5\tau \rceil)$; muestras por temperatura.}
@@ -79,7 +136,15 @@ red cuadrada de $L \times L$ sitios con condiciones de contorno periódicas, $k_
 
 \subsection{Observables}
 \todo{Definiciones de $\expval{|m|}$, $\chi'$, $C$, $\expval{m^2}$, $\expval{m^4}$, $U_L$; cálculo de errores.}
-
+  \subsubsection{Susceptibilidad y calor específico como fluctuaciones}
+  \label{sec:fluctuaciones}
+  % =========================================================================
+  \todo{Problema 1: derivación de}
+  \begin{align}
+    \chi &= \frac{\partial \expval{m}}{\partial B} = \beta N \left[ \expval{m^2} - \expval{m}^2 \right], \\
+    C &= -T \frac{\partial^2 f}{\partial T^2} = \frac{\beta^2}{N} \left[ \expval{H^2} - \expval{H}^2 \right].
+  \end{align}
+  % =========================================================================
 % =========================================================================
 \section{Resultados}
 \label{sec:resultados}
@@ -224,15 +289,6 @@ red cuadrada de $L \times L$ sitios con condiciones de contorno periódicas, $k_
 \todo{}
 
 % =========================================================================
-\begin{thebibliography}{9}
-\bibitem{onsager} L.~Onsager, Phys. Rev. \textbf{65}, 117 (1944).
-\bibitem{yang} C.~N.~Yang, Phys. Rev. \textbf{85}, 808 (1952).
-\bibitem{ferdinand} A.~E.~Ferdinand y M.~E.~Fisher, Phys. Rev. \textbf{185}, 832 (1969).
-\bibitem{binder81} K.~Binder, Z. Phys. B \textbf{43}, 119 (1981).
-\bibitem{kamieniarz} G.~Kamieniarz y H.~W.~J.~Blöte, J. Phys. A \textbf{26}, 201 (1993).
-\bibitem{sokal} A.~D.~Sokal, \emph{Monte Carlo Methods in Statistical Mechanics: Foundations and New Algorithms}, Cours de Troisième Cycle, Lausanne (1989).
-\bibitem{newman} M.~E.~J.~Newman y G.~T.~Barkema, \emph{Monte Carlo Methods in Statistical Physics}, Oxford University Press (1999).
-\bibitem{landau} D.~P.~Landau y K.~Binder, \emph{A Guide to Monte Carlo Simulations in Statistical Physics}, Cambridge University Press (2000).
-\end{thebibliography}
+\printbibliography
 
 \end{document}
