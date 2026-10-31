@@ -1,0 +1,43 @@
+==============================================================================
+ REPORTE: INFLEXION DE <|m|>, EXPONENTES CRITICOS Y CALOR ESPECIFICO (ISING 2D)
+==============================================================================
+Fecha y hora del analisis : 2026-10-29 11:52:12
+Directorio de datos       : /home/nvazquez/ising-fenomenos-criticos/run/data
+Tamanos L procesados      : 16, 32, 64, 128, 200
+Ventanas locales          : ±2.0 / L, polinomio grado 3
+Tc usado (Binder)         : 2.26928 +/- 0.00038
+------------------------------------------------------------------------------
+(b) PUNTO DE INFLEXION DE <|m|>(T)
+  L =  16 : T_infl = 2.34332 +/- 0.00702
+  L =  32 : T_infl = 2.30909 +/- 0.00468
+  L =  64 : T_infl = 2.29021 +/- 0.00177
+  L = 128 : T_infl = 2.28053 +/- 0.00233
+  L = 200 : T_infl = 2.27696 +/- 0.00125
+  Tc extrapolado (1/L -> 0)  : 2.27124 +/- 0.00135 (estad.) +/- 0.00370 (sist.)  [Onsager 2.269185]
+  Tc extrapolado (L >= 32)    : 2.27084 +/- 0.00164
+  Saturacion a alta T, <|m|> ~ N^k (esperado k = -0.5):
+    T = 3.0 : k = -0.4981 +/- 0.0035
+    T = 3.5 : k = -0.5054 +/- 0.0025
+    T = 4.0 : k = -0.4983 +/- 0.0053
+------------------------------------------------------------------------------
+(e) EXPONENTES POR FSS
+  beta/nu  (<|m|>(Tc))        : 0.1257 +/- 0.0034   (exacto 0.125)
+  1/nu     (|dU/dT|(Tc))      : 0.9769 +/- 0.0160   (exacto 1)
+  1/nu     (T*(L) - Tc)       : 1.0022 +/- 0.0184
+  1/nu     (FWHM chi)         : 1.0310 +/- 0.0122
+  gamma/nu (chi_max)          : 1.7557 +/- 0.0065   (exacto 1.75)
+  gamma/nu (chi(Tc))          : 1.7607 +/- 0.0046
+  Exponentes derivados (beta/nu, gamma/nu de chi_max, 1/nu de dU/dT):
+    nu     =   1.0236 +/- 0.0167  [1 / (1/nu)             ]  exacto  1.0000 (+1.4 sigma)
+    beta   =   0.1286 +/- 0.0041  [nu * (beta/nu)         ]  exacto  0.1250 (+0.9 sigma)
+    gamma  =   1.7973 +/- 0.0301  [nu * (gamma/nu)        ]  exacto  1.7500 (+1.6 sigma)
+    alpha  =  -0.0473 +/- 0.0335  [2 - d nu (hiperesc.)   ]  exacto  0.0000 (-1.4 sigma)
+    eta    =   0.2443 +/- 0.0065  [2 - gamma/nu (Fisher)  ]  exacto  0.2500 (-0.9 sigma)
+    delta  =  14.9736 +/- 0.3885  [1 + gamma/beta (Widom) ]  exacto 15.0000 (-0.1 sigma)
+  Hiperescala 2 beta/nu + gamma/nu = 2.0070 +/- 0.0095 (d = 2)
+------------------------------------------------------------------------------
+(g) CALOR ESPECIFICO MAXIMO
+  Cv_max = A + B ln L : B = 0.5181 +/- 0.0062 (exacto 0.4945), rms = 0.0098
+  Cv_max ~ L^(a/n)    : alpha/nu = 0.2415 +/- 0.0118, rms = 0.0385
+  alpha/nu efectivo   : 16-32: 0.305, 32-64: 0.245, 64-128: 0.205, 128-200: 0.214
+==============================================================================

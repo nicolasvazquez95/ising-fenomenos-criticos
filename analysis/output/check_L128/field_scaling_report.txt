@@ -1,0 +1,23 @@
+==============================================================================
+ REPORTE: MAGNETIZACION VS CAMPO, EXPONENTE DELTA Y COLAPSO (ISING 2D)
+==============================================================================
+Fecha y hora del analisis : 2026-10-31 12:52:24
+Datos                     : field_magnetization_L128.csv (231 puntos)
+Tc de referencia          : 2.269280 +/- 0.00038 (Binder)
+Temperaturas (t = T/Tc-1) : -0.2, -0.1, -0.05, -0.02, -0.01, 0.0, 0.01, 0.02, 0.05, 0.1, 0.2
+------------------------------------------------------------------------------
+EXPONENTE DELTA (m ~ B^(1/delta) en Tc)
+  Ventana principal       : B in [1e-03, 0.022], 9 puntos, chi2_red = 1.10
+  delta                   : 15.186 +/- 0.104 (ajuste) +/- 0.130 (Tc) +/- 0.234 (ventana)
+  delta (error total)     : 15.186 +/- 0.287   [exacto 15]
+  delta por Widom (item e): 14.97 +/- 0.39
+------------------------------------------------------------------------------
+COLAPSO m/|t|^beta vs B/|t|^Delta (rms de Δln y entre curvas de una rama)
+  Exactos   beta = 0.1250, delta = 15.000, Delta = 1.8750 | todos los puntos         | T<Tc: 0.0466  T>Tc: 0.0404
+  Exactos   beta = 0.1250, delta = 15.000, Delta = 1.8750 | |t| <= 0.05, B <= 0.10   | T<Tc: 0.0084  T>Tc: 0.0110
+  Estimados beta = 0.1286, delta = 15.186, Delta = 1.9532 | todos los puntos         | T<Tc: 0.0485  T>Tc: 0.0639
+  Estimados beta = 0.1286, delta = 15.186, Delta = 1.9532 | |t| <= 0.05, B <= 0.10   | T<Tc: 0.0093  T>Tc: 0.0250
+------------------------------------------------------------------------------
+COMPARACION ENTRE TAMAÑOS (pull = Δm / σ)
+  L = 128 vs 200 : 231 puntos, rms pull = 0.93, max |pull| = 3.3 (t = -0.20, B = 1.0e-01)
+==============================================================================

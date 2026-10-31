@@ -1,0 +1,238 @@
+\documentclass[a4paper,11pt]{article}
+
+% -------------------------------------------------------------------------
+% Paquetes
+% -------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot,es-tabla]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+
+% Figuras generadas por los scripts de analisis y de corridas
+\graphicspath{{../analysis/output/}{../run/data/}}
+
+% Notas para uno mismo durante la escritura (borrar antes de entregar)
+\newcommand{\todo}[1]{\textcolor{red}{[\textbf{TODO:} #1]}}
+
+% Notacion
+\newcommand{\expval}[1]{\left\langle #1 \right\rangle}
+\newcommand{\Tc}{T_c}
+
+% -------------------------------------------------------------------------
+\title{Simulaciones de Monte Carlo del modelo de Ising en $d = 2$\\[0.3em]
+\large Elementos de la Teoría de los Fenómenos Críticos --- Guía N$^\circ$ 4}
+\author{\todo{Nombre}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\todo{Resumen: modelo, método, tamaños simulados, estimaciones de $\Tc$ y de los exponentes críticos, comparación con los resultados exactos.}
+\end{abstract}
+
+% =========================================================================
+\section{Introducción}
+% =========================================================================
+\todo{Modelo de Ising, transición ferromagnética en $d = 2$, solución de Onsager, escalamiento de tamaño finito.}
+
+% =========================================================================
+\section{Susceptibilidad y calor específico como fluctuaciones}
+\label{sec:fluctuaciones}
+% =========================================================================
+\todo{Problema 1: derivación de}
+\begin{align}
+  \chi &= \frac{\partial \expval{m}}{\partial B} = \beta N \left[ \expval{m^2} - \expval{m}^2 \right], \\
+  C &= -T \frac{\partial^2 f}{\partial T^2} = \frac{\beta^2}{N} \left[ \expval{H^2} - \expval{H}^2 \right].
+\end{align}
+
+% =========================================================================
+\section{Modelo y método}
+\label{sec:metodo}
+% =========================================================================
+
+\subsection{Modelo}
+\begin{equation}
+  H = -J \sum_{\langle i,j \rangle} S_i S_j - B \sum_i S_i ,
+\end{equation}
+red cuadrada de $L \times L$ sitios con condiciones de contorno periódicas, $k_B = 1$.
+
+\subsection{Algoritmo de Monte Carlo}
+\todo{Baño térmico (heat bath) con elección aleatoria de sitio; probabilidad de $S_i = +1$; relación con Metropolis (mismo equilibrio, distinta dinámica); definición de MCS.}
+
+\subsection{Tiempos de autocorrelación y protocolo de muestreo}
+\todo{Estimación de $\tau_\mathrm{int}$ con ventana autoconsistente; ralentización crítica; termalización $\max(500, \lceil 10\tau \rceil)$ y separación entre muestras $\max(2, \lceil 2.5\tau \rceil)$; muestras por temperatura.}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{decorrelation_L64_nT96.png}
+  \caption{\todo{Autocorrelación de $|m|$ y $\tau_\mathrm{int}(T)$ (tests preliminares).}}
+  \label{fig:decorrelacion}
+\end{figure}
+
+\subsection{Observables}
+\todo{Definiciones de $\expval{|m|}$, $\chi'$, $C$, $\expval{m^2}$, $\expval{m^4}$, $U_L$; cálculo de errores.}
+
+% =========================================================================
+\section{Resultados}
+\label{sec:resultados}
+% =========================================================================
+
+\subsection{Curvas termodinámicas a campo nulo}
+\label{sec:curvas}
+\todo{Ítem (a).}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{observables_vs_exact.png}
+  \caption{\todo{$\expval{|m|}$, $\expval{e}$, $\chi$ y $C$ para $L = 16, 32, 64, 128, 200$, con la solución exacta de red infinita.}}
+  \label{fig:observables}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{observables_near_Tc.png}
+  \caption{\todo{Zoom en la región crítica y momentos $\expval{m^2}_L$, $\expval{m^4}_L$.}}
+  \label{fig:observables_zoom}
+\end{figure}
+
+\subsection{Punto de inflexión de la magnetización}
+\label{sec:inflexion}
+\todo{Ítem (b): extrapolación $1/L \to 0$ y saturación $\propto 1/\sqrt{N}$.}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{magnetization_inflection.png}
+  \caption{\todo{Punto de inflexión de $\expval{|m|}$, extrapolación y saturación a alta $T$.}}
+  \label{fig:inflexion}
+\end{figure}
+
+\subsection{Cumulante de Binder}
+\label{sec:binder}
+\todo{Ítem (c).}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{binder_crossing.png}
+  \caption{\todo{Cruce del cumulante de Binder.}}
+  \label{fig:binder}
+\end{figure}
+
+\subsection{Máximo de la susceptibilidad}
+\label{sec:chi}
+\todo{Ítem (d): $T^*(L) = \Tc + A L^{-1/\nu}$ y $\chi_\mathrm{max} \sim L^{\gamma/\nu}$.}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fss_scaling_fits.png}
+  \caption{\todo{Escalamiento de tamaño finito del pico de $\chi$.}}
+  \label{fig:chi}
+\end{figure}
+
+\subsection{Exponentes críticos}
+\label{sec:exponentes}
+\todo{Ítem (e).}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{critical_exponents_fss.png}
+  \caption{\todo{Ajustes de FSS en $\Tc$.}}
+  \label{fig:exponentes}
+\end{figure}
+
+\begin{table}[htbp]
+  \centering
+  \caption{\todo{Exponentes críticos estimados y exactos.}}
+  \label{tab:exponentes}
+  \begin{tabular}{lccc}
+    \toprule
+    Exponente & Relación & Estimado & Exacto \\
+    \midrule
+    $\nu$    & FSS de $dU_L/dT$          & \todo{} & $1$ \\
+    $\beta$  & $\nu \cdot (\beta/\nu)$   & \todo{} & $1/8$ \\
+    $\gamma$ & $\nu \cdot (\gamma/\nu)$  & \todo{} & $7/4$ \\
+    $\alpha$ & $2 - d\nu$                & \todo{} & $0$ (log) \\
+    $\eta$   & $2 - \gamma/\nu$          & \todo{} & $1/4$ \\
+    $\delta$ & $1 + \gamma/\beta$        & \todo{} & $15$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Magnetización en función del campo}
+\label{sec:campo}
+\todo{Ítem (f): curvas $m(B)$, exponente $\delta$ y colapso $m/|t|^\beta$ vs $B/|t|^\Delta$.}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{field_magnetization_curves.png}
+  \caption{\todo{$m(B/J)$ para distintas temperaturas.}}
+  \label{fig:campo}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{field_delta.png}
+  \caption{\todo{Estimación de $\delta$ en $\Tc$.}}
+  \label{fig:delta}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{field_scaling_collapse.png}
+  \caption{\todo{Colapso con exponentes exactos y estimados.}}
+  \label{fig:colapso}
+\end{figure}
+
+\subsection{Calor específico}
+\label{sec:cv}
+\todo{Ítem (g): $\max C \sim L^{\alpha/\nu}$ frente a divergencia logarítmica.}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{specific_heat_scaling.png}
+  \caption{\todo{Crecimiento de $C_\mathrm{max}$ con $L$.}}
+  \label{fig:cv}
+\end{figure}
+
+\subsection{Resumen de las estimaciones de $\Tc$}
+\begin{table}[htbp]
+  \centering
+  \caption{\todo{Estimaciones de la temperatura crítica.}}
+  \label{tab:Tc}
+  \begin{tabular}{lc}
+    \toprule
+    Método & $\Tc$ \\
+    \midrule
+    Inflexión de $\expval{|m|}$             & \todo{} \\
+    Cruce de Binder                        & \todo{} \\
+    Máximo de $\chi$, $T^*(L) \to \Tc$     & \todo{} \\
+    Exacto (Onsager)                       & $2/\ln(1+\sqrt{2}) = 2.269185\ldots$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =========================================================================
+\section{Conclusiones}
+% =========================================================================
+\todo{}
+
+% =========================================================================
+\begin{thebibliography}{9}
+\bibitem{onsager} L.~Onsager, Phys. Rev. \textbf{65}, 117 (1944).
+\bibitem{yang} C.~N.~Yang, Phys. Rev. \textbf{85}, 808 (1952).
+\bibitem{ferdinand} A.~E.~Ferdinand y M.~E.~Fisher, Phys. Rev. \textbf{185}, 832 (1969).
+\bibitem{binder81} K.~Binder, Z. Phys. B \textbf{43}, 119 (1981).
+\bibitem{kamieniarz} G.~Kamieniarz y H.~W.~J.~Blöte, J. Phys. A \textbf{26}, 201 (1993).
+\bibitem{sokal} A.~D.~Sokal, \emph{Monte Carlo Methods in Statistical Mechanics: Foundations and New Algorithms}, Cours de Troisième Cycle, Lausanne (1989).
+\bibitem{newman} M.~E.~J.~Newman y G.~T.~Barkema, \emph{Monte Carlo Methods in Statistical Physics}, Oxford University Press (1999).
+\bibitem{landau} D.~P.~Landau y K.~Binder, \emph{A Guide to Monte Carlo Simulations in Statistical Physics}, Cambridge University Press (2000).
+\end{thebibliography}
+
+\end{document}

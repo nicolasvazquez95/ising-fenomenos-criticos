@@ -1,0 +1,16 @@
+==============================================================================
+ REPORTE: OBSERVABLES VS SOLUCION EXACTA DE RED INFINITA (ISING 2D)
+==============================================================================
+Fecha y hora del analisis : 2026-10-29 11:56:25
+Directorio de datos       : /home/nvazquez/ising-fenomenos-criticos/run/data
+Tamanos L procesados      : 16, 32, 64, 128, 200
+Solucion exacta           : m de Yang (1952); u y Cv de Onsager (1944)
+Region comparada          : |T - Tc| > 0.25 (para <|m|>, solo T < Tc - 0.25)
+------------------------------------------------------------------------------
+pull = (simulacion - exacto) / error estadistico (se espera rms ≈ 1)
+  L =  16 : <|m|> rms pull =  1.14 | <e> rms pull =  2.42 | Cv desvio medio = +1.22% (rms 4.45%)
+  L =  32 : <|m|> rms pull =  0.84 | <e> rms pull =  1.02 | Cv desvio medio = +0.02% (rms 2.41%)
+  L =  64 : <|m|> rms pull =  0.84 | <e> rms pull =  0.86 | Cv desvio medio = -0.48% (rms 2.58%)
+  L = 128 : <|m|> rms pull =  0.90 | <e> rms pull =  0.93 | Cv desvio medio = +0.41% (rms 2.74%)
+  L = 200 : <|m|> rms pull =  1.00 | <e> rms pull =  1.03 | Cv desvio medio = -0.04% (rms 2.08%)
+==============================================================================

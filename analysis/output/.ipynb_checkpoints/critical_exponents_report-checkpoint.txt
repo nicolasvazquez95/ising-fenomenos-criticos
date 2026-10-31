@@ -1,0 +1,11 @@
+======================================================================
+ REPORTE DE EXPONENTES CRITICOS Y ESCALAMIENTO FSS (ISING 2D)
+======================================================================
+Fecha y hora del analisis : 2026-10-01 19:21:29
+Directorio de datos       : /home/nvazquez/ising-fenomenos-criticos/run/data
+Tamanos L procesados      : 16, 32
+----------------------------------------------------------------------
+RESULTADOS DE AJUSTE:
+  - gamma / nu            : 1.7950 +/- 0.0000 (Exacto: 1.750) [R2 = 1.0000]
+  - 1 / nu (ancho del pico): 0.9676 +/- 0.0000 (Exacto: 1.000) -> nu ≈ 1.034
+  - Tc extrapolado        : 2.2756 +/- 0.0000 (Onsager: 2.269185)

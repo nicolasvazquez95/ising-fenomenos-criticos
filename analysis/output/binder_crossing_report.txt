@@ -1,0 +1,22 @@
+======================================================================
+ REPORTE: Tc POR CRUCE DEL CUMULANTE DE BINDER (ISING 2D)
+======================================================================
+Fecha y hora del analisis : 2026-10-29 11:49:23
+Directorio de datos       : /home/nvazquez/ising-fenomenos-criticos/run/data
+Tamanos L procesados      : 16, 32, 64, 128, 200
+Definicion                : U_L = 1 - <m^4> / (3 <m^2>^2)
+Ventana de ajuste         : |T - 2.27| <= 2.0 / L, polinomio grado 3
+Error estadistico         : bootstrap parametrico (2000 replicas, residuos del ajuste)
+----------------------------------------------------------------------
+CRUCES DE PARES CONSECUTIVOS:
+  L =  16 /  32 : T* = 2.26934 +/- 0.00241   U* = 0.6113 +/- 0.0017
+  L =  32 /  64 : T* = 2.26787 +/- 0.00125   U* = 0.6129 +/- 0.0023
+  L =  64 / 128 : T* = 2.26922 +/- 0.00048   U* = 0.6100 +/- 0.0016
+  L = 128 / 200 : T* = 2.26964 +/- 0.00056   U* = 0.6081 +/- 0.0032
+----------------------------------------------------------------------
+RESULTADO (promedio pesado de pares consecutivos con L1 > 16):
+  - Tc (Binder)       : 2.26928 +/- 0.00035 (estad.) +/- 0.00016 (sist.)
+  - Tc Onsager        : 2.269185
+  - U* (1 - m4/3m2^2) : 0.6106 +/- 0.0012 (referencia 0.61069)
+  - U* guia (m4/m2^2) : 1.1683 +/- 0.0037 (referencia 1.1679)
+======================================================================
