@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,11pt]{article}
 
 % -------------------------------------------------------------------------
 % Paquetes
@@ -21,7 +21,7 @@
 \addbibresource{refs.bib}
 
 % Figuras generadas por los scripts de analisis y de corridas
-\graphicspath{{../analysis/output/}{../run/data/}}
+\graphicspath{{../figuras/}{../analysis/output/}{../run/data/}}
 
 % Notas para uno mismo durante la escritura (borrar antes de entregar)
 \newcommand{\todo}[1]{\textcolor{red}{[\textbf{TODO:} #1]}}
@@ -125,26 +125,39 @@ Por otra parte, la dinámica de Glauber tiene la ventaja de admitir una interpre
 En una dimensión este modelo es exactamente soluble, y la evolución de $\expval{S_i}$ obedece una ecuación de difusión discreta.
 
 \subsection{Tiempos de autocorrelación y protocolo de muestreo}
-\todo{Estimación de $\tau_\mathrm{int}$ con ventana autoconsistente; ralentización crítica; termalización $\max(500, \lceil 10\tau \rceil)$ y separación entre muestras $\max(2, \lceil 2.5\tau \rceil)$; muestras por temperatura.}
+\label{sec:autocorrelacion}
+Como las configuraciones sucesivas de la cadena de Markov están correlacionadas, antes de las corridas de producción se estimó el tiempo de autocorrelación integrado $\tau_\mathrm{int}$ de $|m|$ y de $e$ en función de $T$ para cada tamaño, con el método de ventana autoconsistente de Sokal \cite{landauGuideMonteCarlo2020}.
+Para ello se generaron series preliminares de entre $5 \times 10^5$ y $2 \times 10^7$ MCS, según el tamaño, partiendo de una configuración ordenada.
+Como se observa en la Fig.~\ref{fig:decorrelacion}, $\tau_\mathrm{int}$ medido para el caso $L=64$ presenta un máximo cerca de $\Tc$ que crece rápidamente con $L$ (desde $\sim 60$ MCS para $L = 16$ hasta $\sim 1.4 \times 10^4$ MCS para $L = 200$): es el efecto de  \textit{critical slowing down}, del cual hemos hecho un análisis en el Apéndice~\ref{app:z}.
+
+Estos valores se usaron únicamente para fijar el protocolo de simulación.
+Para cada $T$ se interpoló $\tau(T)$ y se tomaron $10\tau$ MCS de termalización y una separación de $2.5\tau$ MCS entre muestras, acumulando entre 5000 y 7500 muestras por temperatura.
+De este modo las muestras pueden considerarse independientes. Este procedimiento permite calcular los observables termodinámicos y sus errores a partir de una sola corrida de Monte Carlo, evitando la necesidad de promediar sobre varias corridas independientes.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{decorrelation_L64_nT96.png}
-  \caption{\todo{Autocorrelación de $|m|$ y $\tau_\mathrm{int}(T)$ (tests preliminares).}}
+  \includegraphics[width=\textwidth]{decorrelation_L64_nT96.pdf}
+  \caption{Decorrelación para $L = 64$. Izquierda: autocorrelación $\rho_{|m|}(t)$ para las 96 temperaturas estudiadas en $[2.1, 2.5]$ (de azul a rojo al aumentar $T$); en negro, $T = 2.268$, donde se observa el máximo de $\tau_\mathrm{int}$. Derecha: $\tau_\mathrm{int}(T)$ de $|m|$ y $e$; la línea punteada indica $\Tc$ exacta.}
   \label{fig:decorrelacion}
 \end{figure}
 
 \subsection{Observables}
-\todo{Definiciones de $\expval{|m|}$, $\chi'$, $C$, $\expval{m^2}$, $\expval{m^4}$, $U_L$; cálculo de errores.}
-  \subsubsection{Susceptibilidad y calor específico como fluctuaciones}
-  \label{sec:fluctuaciones}
-  % =========================================================================
-  \todo{Problema 1: derivación de}
-  \begin{align}
-    \chi &= \frac{\partial \expval{m}}{\partial B} = \beta N \left[ \expval{m^2} - \expval{m}^2 \right], \\
-    C &= -T \frac{\partial^2 f}{\partial T^2} = \frac{\beta^2}{N} \left[ \expval{H^2} - \expval{H}^2 \right].
-  \end{align}
-  % =========================================================================
+\label{sec:observables}
+En cada temperatura se midieron la magnetización por espín $m = N^{-1} \sum_i S_i$ y la energía $H$, y a partir de sus promedios se calcularon
+\begin{equation}
+  \chi' = \frac{N}{T} \left[ \expval{m^2} - \expval{|m|}^2 \right], \qquad
+  C = \frac{1}{N T^2} \left[ \expval{H^2} - \expval{H}^2 \right], \qquad
+  U_L = 1 - \frac{\expval{m^4}}{3 \expval{m^2}^2} .
+  \label{eq:observables}
+\end{equation}
+Las expresiones de la susceptibilidad y del calor específico como fluctuaciones se demuestran en el Apéndice~\ref{app:fluctuaciones}.
+En una red finita a campo nulo $\expval{m} = 0$ por simetría, ya que el sistema recorre ambos signos de la magnetización; por eso se usa $\expval{|m|}$ como parámetro de orden, y también en la susceptibilidad $\expval{m}$ \cite{landauGuideMonteCarlo2020}.
+Elegimos nombrar esta cantidad derivada de $\expval{|m|}$ como $\chi'$ para diferenciarla de la susceptibilidad $\chi$ propuesta en la consigna, que se define como la derivada de $\expval{m}$ respecto del campo externo $B$.
+$\chi'$ escala con el mismo exponente $\gamma/\nu$ que $\chi$, aunque su máximo queda desplazado hacia temperaturas mayores.
+Para el cumulante de Binder usamos la convención en la que $U_L \to 2/3$ en la fase ordenada y $U_L \to 0$ en la desordenada; en la consigna se usa $\expval{m^4}/\expval{m^2}^2 = 3(1 - U_L)$, que tiene el mismo cruce.
+
+Como no se guardaron las series de muestras, $\chi'$, $C$ y $U_L$ no tienen error por punto. Las incertezas de las cantidades derivadas de ellos se estiman a partir de los residuos de los ajustes.
+Esto puede introducir un error sistemático por subestimación.
 % =========================================================================
 \section{Resultados}
 \label{sec:resultados}
@@ -152,20 +165,27 @@ En una dimensión este modelo es exactamente soluble, y la evolución de $\expva
 
 \subsection{Curvas termodinámicas a campo nulo}
 \label{sec:curvas}
-\todo{Ítem (a).}
+La Fig.~\ref{fig:observables} muestra $\expval{|m|}$, $\chi'$ y $C$ en el rango $1 \leq T \leq 4$ para todos los tamaños simulados, junto con la solución exacta en el límite termodinámico.
+En el Apéndice~\ref{app:material} de material adicional, se presentan estas mismas curvas y otras cantidades relacionadas, haciendo zoom en la región crítica.
+Lejos de la transición, las simulaciones reproducen la solución exacta dentro de los errores estadísticos.
+% Para cuantificarlo, en la región $|T - \Tc| > 0.25$ calculamos el \emph{pull} $(X_\mathrm{MC} - X_\mathrm{exacto})/\sigma$: su valor cuadrático medio está entre $0.84$ y $1.14$ para $\expval{|m|}$ en todos los tamaños, y entre $0.86$ y $1.03$ para $\expval{e}$ con $L \geq 32$.
+% Que este valor sea cercano a $1$ indica que las muestras son efectivamente independientes y que los errores $\sigma/\sqrt{n}$ están bien estimados, lo que valida el protocolo de la Sección~\ref{sec:autocorrelacion}.
+% Solo la energía de $L = 16$ se aparta de este comportamiento (\emph{pull} rms $= 2.4$), lo que atribuimos a efectos de tamaño finito.
+% Por su parte, el calor específico difiere del exacto en menos de un $1.3\,\%$ en promedio.
+
+Cerca de $\Tc$, en cambio, aparecen los efectos de tamaño finito.
+La magnetización no se anula por encima de $\Tc$, sino que decae suavemente, más lentamente para los $L$ más pequeños.
+Los efectos de tamaño finito también se observan en las divergencias de $\chi$ y $C$, que se redondean en picos de altura finita. 
+Estos picos crecen y se desplazan hacia $\Tc$ al aumentar $L$, aunque este crecimiento es más lento para la divergencia del calor específico, de la cual se espera un comportamiento logarítmico.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{observables_vs_exact.png}
-  \caption{\todo{$\expval{|m|}$, $\expval{e}$, $\chi$ y $C$ para $L = 16, 32, 64, 128, 200$, con la solución exacta de red infinita.}}
+  \includegraphics[width=\textwidth]{observables_vs_exact.pdf}
+  \caption{Observables a campo nulo en función de la temperatura para $L = 16$, $32$, $64$, $128$ y $200$: (a) magnetización media $\expval{|m|}$, (b) energía por espín $\expval{e}$, (c) susceptibilidad $\chi'$ (en escala logarítmica) y (d) calor específico $C$.
+  La línea a trazos es la solución exacta en el límite termodinámico: la magnetización espontánea de Yang en (a), y la energía y el calor específico de Onsager en (b) y (d).
+  La línea punteada vertical indica $\Tc$.
+  Notar que la grilla de temperaturas no es uniforme, con mayor densidad de puntos cerca de $\Tc$, donde se concentran los efectos de tamaño finito.}
   \label{fig:observables}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{observables_near_Tc.png}
-  \caption{\todo{Zoom en la región crítica y momentos $\expval{m^2}_L$, $\expval{m^4}_L$.}}
-  \label{fig:observables_zoom}
 \end{figure}
 
 \subsection{Punto de inflexión de la magnetización}
@@ -290,5 +310,100 @@ En una dimensión este modelo es exactamente soluble, y la evolución de $\expva
 
 % =========================================================================
 \printbibliography
+
+\appendix
+\section{Exponente dinámico $z$}
+\label{app:z}
+Aunque no era un objetivo del trabajo, los tiempos de autocorrelación del estudio preliminar permiten estimar el exponente dinámico $z$, definido por $\tau \sim \xi^{z}$.
+En un sistema finito en $\Tc$, la longitud de correlación queda limitada por el tamaño, $\xi \sim L$, de modo que $\tau_\mathrm{int}(\Tc) \sim L^{z}$, y más en general $\tau_\mathrm{int} = L^{z} \, \mathcal{F}\big((T - \Tc) L^{1/\nu}\big)$.
+
+Para cada $L$ se obtuvo $\tau_\mathrm{int}(\Tc)$ ajustando un polinomio a $\ln \tau_\mathrm{int}$ en la región $|T - \Tc| L \leq 2$, lo que filtra las fluctuaciones de la estimación punto a punto.
+El ajuste de ley de potencia para $|m|$ (Fig.~\ref{fig:z}b) da $z = 2.14 \pm 0.01$, y el colapso de las curvas completas con $\nu = 1$ (Fig.~\ref{fig:z}a) da $z = 2.16$.
+Variando la ventana de ajuste y el grado del polinomio, o descartando los tamaños más chicos, se obtienen valores entre $2.14$ y $2.19$, por lo que estimamos $z = 2.16 \pm 0.02$, compatible con el valor de referencia para dinámicas locales sin conservación, $z = 2.1665(12)$ \cite{nightingaleDynamicExponentTwoDimensional1996}.
+
+Adicionalmente, se midió la autocorrelación de la energía. Se observa que su tiempo de autocorrelación característico crece con un exponente efectivo menor ($1.74 \pm 0.01$), indicando una relajación más rápida que la de la magnetización.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{dynamic_exponent_z.pdf}
+  \caption{Izq: Colapso de $\tau_\mathrm{int}(|m|)/L^{z}$ en función de $(T - \Tc)L$. Der: $\tau_\mathrm{int}$ evaluado en $\Tc$ para $|m|$ y $e$, con ajustes de ley de potencia; en ambos casos, se indica el exponente obtenido.}
+  \label{fig:z}
+\end{figure}
+
+\section{Fluctuaciones y relaciones de respuesta}
+\label{app:fluctuaciones}
+En esta sección se demuestra que la susceptibilidad y el calor específico pueden expresarse como fluctuaciones de la magnetización y de la energía, respectivamente.
+
+Escribimos el Hamiltoniano separando explícitamente el acoplamiento con el campo externo,
+\begin{equation*}
+    \mathcal{H} = \mathcal{H}_0(\{S_i\}) - B\sum_i S_i = \mathcal{H}_0 - N B\, m ,
+\end{equation*}
+donde $\mathcal{H}_0$ no depende de $B$. La función de partición y los promedios térmicos son
+\begin{equation*}
+    Z = \sum_{\{S_i\}} e^{-\beta \mathcal{H}}, \qquad
+    \expval{A} = \frac{1}{Z}\sum_{\{S_i\}} A\, e^{-\beta \mathcal{H}} .
+\end{equation*}
+Trabajamos con $k_B = 1$, de modo que $\beta = 1/T$.
+
+\paragraph{Susceptibilidad.}
+Como $\partial \mathcal{H}/\partial B = -N m$, se tiene $\partial e^{-\beta\mathcal{H}}/\partial B = \beta N m\, e^{-\beta\mathcal{H}}$, y en particular
+\begin{equation*}
+    \frac{\partial Z}{\partial B} = \beta N \sum_{\{S_i\}} m\, e^{-\beta\mathcal{H}} = \beta N Z \expval{m}
+    \quad\Longrightarrow\quad
+    \expval{m} = \frac{1}{\beta N}\frac{\partial \ln Z}{\partial B}.
+\end{equation*}
+Derivando $\expval{m} = Z^{-1}\sum m\, e^{-\beta\mathcal{H}}$ respecto de $B$ (a $T$ fija):
+\begin{align*}
+    \chi = \frac{\partial \expval{m}}{\partial B}
+    &= \frac{1}{Z}\sum_{\{S_i\}} m\,(\beta N m)\, e^{-\beta\mathcal{H}}
+       - \frac{1}{Z^2}\frac{\partial Z}{\partial B}\sum_{\{S_i\}} m\, e^{-\beta\mathcal{H}} \\
+    &= \beta N \expval{m^2} - \frac{1}{Z^2}\left(\beta N Z\expval{m}\right)\left(Z\expval{m}\right) \\
+    &= \beta N \left[ \expval{m^2} - \expval{m}^2 \right].
+\end{align*}
+Equivalentemente, $\chi = \dfrac{1}{\beta N}\dfrac{\partial^2 \ln Z}{\partial B^2}$: la susceptibilidad es la varianza de la magnetización, es decir, la respuesta lineal está determinada por las fluctuaciones de equilibrio.
+
+\paragraph{Calor específico.}
+La energía libre por sitio es $f = -\dfrac{T}{N}\ln Z$, es decir, $\beta f = -\dfrac{1}{N}\ln Z$. La energía media es
+\begin{equation*}
+    \expval{\mathcal{H}} = \frac{1}{Z}\sum_{\{S_i\}} \mathcal{H}\, e^{-\beta\mathcal{H}} = -\frac{\partial \ln Z}{\partial \beta},
+\end{equation*}
+de modo que la energía por sitio $u = \expval{\mathcal{H}}/N$ resulta
+\begin{equation*}
+    u = \frac{\partial (\beta f)}{\partial \beta} = f + \beta\frac{\partial f}{\partial \beta} = f - T\frac{\partial f}{\partial T},
+\end{equation*}
+donde usamos $\beta\,\partial_\beta = -T\,\partial_T$. Esto es simplemente $u = f + Ts$ con $s = -\partial f/\partial T$. Entonces
+\begin{equation*}
+    C = \frac{\partial u}{\partial T}
+    = \frac{\partial f}{\partial T} - \frac{\partial f}{\partial T} - T\frac{\partial^2 f}{\partial T^2}
+    = -T\frac{\partial^2 f}{\partial T^2},
+\end{equation*}
+que es la primera igualdad. Para la segunda, derivamos $\expval{\mathcal{H}}$ respecto de $\beta$ (a $B$ fijo):
+\begin{align*}
+    \frac{\partial \expval{\mathcal{H}}}{\partial \beta}
+    &= \frac{1}{Z}\sum_{\{S_i\}} \mathcal{H}\,(-\mathcal{H})\, e^{-\beta\mathcal{H}}
+       - \frac{1}{Z^2}\frac{\partial Z}{\partial \beta}\sum_{\{S_i\}} \mathcal{H}\, e^{-\beta\mathcal{H}} \\
+    &= -\expval{\mathcal{H}^2} - \frac{1}{Z^2}\left(-Z\expval{\mathcal{H}}\right)\left(Z\expval{\mathcal{H}}\right)
+     = -\left[ \expval{\mathcal{H}^2} - \expval{\mathcal{H}}^2 \right].
+\end{align*}
+Con $\dfrac{\partial \beta}{\partial T} = -\dfrac{1}{T^2} = -\beta^2$:
+\begin{equation*}
+    C = \frac{1}{N}\frac{\partial \expval{\mathcal{H}}}{\partial T}
+      = \frac{1}{N}\frac{\partial \beta}{\partial T}\frac{\partial \expval{\mathcal{H}}}{\partial \beta}
+      = \frac{\beta^2}{N}\left[ \expval{\mathcal{H}^2} - \expval{\mathcal{H}}^2 \right].
+\end{equation*}
+(Restituyendo $k_B$: $C = k_B\beta^2 N^{-1}\left[\expval{\mathcal{H}^2}-\expval{\mathcal{H}}^2\right]$.)
+
+\section{Material adicional}
+\label{app:material}
+En la Fig.~\ref{fig:observables_zoom} se amplía la región crítica y se muestran los momentos $\expval{m^2}$ y $\expval{m^4}$, que por debajo de $\Tc$ tienden a $m_0^2$ y $m_0^4$, con $m_0$ la magnetización espontánea exacta, y por encima de $\Tc$ permanecen finitos en la red finita.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{observables_near_Tc.pdf}
+  \caption{Ampliación de la región crítica, $2.1 \leq T \leq 2.5$, para los mismos tamaños de la Fig.~\ref{fig:observables}: (a) $\expval{|m|}$, (b) $C$, (c) $\expval{m^2}$ y (d) $\expval{m^4}$.
+La línea a trazos es la solución exacta para $L \to \infty$: $m_0$ de Yang en (a), $m_0^2$ en (c), $m_0^4$ en (d), y el calor específico de Onsager en (b).
+La línea punteada vertical indica $\Tc$.}
+  \label{fig:observables_zoom}
+\end{figure}
 
 \end{document}

@@ -1,0 +1,5 @@
+method,z,err
+"tau_int(|m|) at Tc, fit all L",2.141,0.014
+"tau_int(|m|) at Tc, L>=64",2.178,0.031
+collapse of tau_int(|m|) vs (T-Tc)L,2.163,
+tau_int(e) at Tc (effective),1.744,0.011
