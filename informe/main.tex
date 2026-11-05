@@ -179,7 +179,7 @@ La magnetización no se anula por encima de $\Tc$, sino que decae suavemente, m�
 Los efectos de tamaño finito también se observan en las divergencias de $\chi$ y $C$, que se redondean en picos de altura finita. 
 Estos picos crecen y se desplazan hacia $\Tc$ al aumentar $L$, aunque este crecimiento es más lento para la divergencia del calor específico, de la cual se espera un comportamiento logarítmico.
 
-\begin{figure}[htbp]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{observables_vs_exact.pdf}
   \caption{Observables a campo nulo en función de la temperatura para $L = 16$, $32$, $64$, $128$ y $200$: (a) magnetización media $\expval{|m|}$, (b) energía por espín $\expval{e}$, (c) susceptibilidad $\chi'$ (en escala logarítmica) y (d) calor específico $C$.
@@ -203,7 +203,7 @@ La extrapolación $1/L \to 0$ (Fig.~\ref{fig:inflexion}b) da
 compatible con el valor exacto.
 Esta predicción, en principio poco precisa por tomar datos sobre una región amplia de la curva y sobre una derivada numérica, deberá ser comparada más adelante con la estimación obtenida a partir del cruce del cumulante de Binder (Sección~\ref{sec:binder}) y con la de la temperatura del máximo de la susceptibilidad (Sección~\ref{sec:chi}).
 
-\begin{figure}[htbp]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{magnetization_inflection}
   \caption{Punto de inflexión de $\expval{|m|}$.
@@ -236,6 +236,7 @@ Promediando con pesos los cruces de los pares $(32, 64)$, $(64, 128)$ y $(128, 2
   \Tc = 2.2694 \pm 0.0004,
 \end{equation}
 a $\approx 0.3\sigma$ del valor de Onsager.
+Se puede ver una mejora de un orden de magnitud en precisión respecto de lo que se obtuvo con el punto de inflexión de la magnetización.
 El valor del cumulante en el cruce, $U^* = 0.6106 \pm 0.0012$, coincide con el valor universal para la red cuadrada con condiciones periódicas, $U^* = 0.61069$ \cite{kamieniarzUniversalRatioMagnetization1993}.
 
 Por último, al graficar $U_L$ en función de $(T - \Tc) L$, es decir, con $\nu = 1$ y el $\Tc$ obtenido, las curvas de todos los tamaños colapsan sobre una única función de escala (Fig.~\ref{fig:binder}b).
@@ -253,12 +254,39 @@ Se ve que la curva de $L = 16$ se aparta levemente para $(T - \Tc) L \gtrsim 3$,
 
 \subsection{Máximo de la susceptibilidad}
 \label{sec:chi}
-\todo{Ítem (d): $T^*(L) = \Tc + A L^{-1/\nu}$ y $\chi_\mathrm{max} \sim L^{\gamma/\nu}$.}
+En una red finita la divergencia de la susceptibilidad se redondea en un pico de altura finita, cuya posición $T^*(L)$ y altura $\chi'_\mathrm{max}$ dependen del tamaño.
+Según la teoría de escala de tamaño finito,
+\begin{equation}
+  \chi'_\mathrm{max} \sim L^{\gamma/\nu}, \qquad T^*(L) = \Tc + A\, L^{-1/\nu} ,
+  \label{eq:fss_chi}
+\end{equation}
+y el ancho del pico escala como $L^{-1/\nu}$, ya que la región crítica corresponde a valores fijos de la variable de escala $(T - \Tc) L^{1/\nu}$.
+Para cada $L$ ubicamos el máximo ajustando una parábola a los puntos más cercanos al máximo de la grilla.
+
+El ajuste de ley de potencia de la altura del pico (Fig.~\ref{fig:chi}a) da
+\begin{equation}
+  \gamma/\nu = 1.7557 \pm 0.0065 ,
+\end{equation}
+compatible con el valor exacto $7/4$.
+El ancho a media altura (FWHM por sus siglas en inglés) que se grafica en la Fig.~\ref{fig:chi}b da $1/\nu = 1.031 \pm 0.012$.
+Esta estimación no es muy confiable como la de la altura de los picos, pues depende del ancho de la grilla de temperaturas.
+En la Sección~\ref{sec:exponentes} determinamos $\nu$ de manera más robusta.
+
+Por último, $T^*(L)$ resulta lineal en $1/L$ en todo el rango de tamaños (Fig.~\ref{fig:chi}c), como corresponde a $\nu = 1$, y su extrapolación da
+\begin{equation}
+  \Tc = 2.2701 \pm 0.0011.
+\end{equation}
+La precisión de esta estimación es intermedia entre la del punto de inflexión de la magnetización y la del cruce del cumulante de Binder.
+El corrimiento de $T^*(L)$ respecto de $\Tc$ es notable para los tamaños chicos ($T^* = 2.397$ para $L = 16$).
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{fss_scaling_fits.png}
-  \caption{\todo{Escalamiento de tamaño finito del pico de $\chi$.}}
+  \includegraphics[width=\textwidth]{fss_scaling_fits}
+  \caption{Escalamiento de tamaño finito del pico de la susceptibilidad $\chi'$.
+  (a) Altura del máximo, $\chi'_\mathrm{max}$, en función de $L$, con el ajuste $\chi'_\mathrm{max} \propto L^{\gamma/\nu}$.
+  (b) Ancho a media altura del pico, con el ajuste $\mathrm{FWHM} \propto L^{-1/\nu}$.
+  (a) y (b) en escala logarítmica.
+  (c) Posición del máximo, $T^*(L)$, en función de $1/L$, con el ajuste lineal y su extrapolación a $1/L \to 0$; la línea punteada indica el $\Tc$ exacto.}
   \label{fig:chi}
 \end{figure}
 
