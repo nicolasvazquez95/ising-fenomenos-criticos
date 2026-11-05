@@ -46,9 +46,9 @@
 \section{Introducción}
 % =========================================================================
 Dentro de la teoría del magnetismo y de los fenómenos críticos, el modelo de Ising es un sistema paradigmático \cite{tauberCriticalDynamicsField2014}.
-Además de su importancia histórica, es un modelo simple que exhibe un comportamiento crítico que queda por fuera de las teorías ``clásicas'' de campo medio (como la teoría de Landau o Curie--Weiss) \cite{salinasIntroductionStatisticalPhysics2001}.
-
+Además de su importancia histórica, es un modelo simple que exhibe un comportamiento crítico que excede a las teorías ``clásicas'' de campo medio (como la teoría de Landau o Curie--Weiss) \cite{salinasIntroductionStatisticalPhysics2001}.
 El modelo de Ising en dos dimensiones, con su transición de fase de segundo orden, es el modelo mínimo que caracteriza la transición paramagnética--ferromagnética de muchos materiales magnéticos \cite{blundellMagnetismCondensedMatter2023}. 
+
 Sin embargo, en sentido estricto la transición de fase solo se da en el límite termodinámico: en un sistema finito las funciones termodinámicas son analíticas y no presentan singularidades \cite{goldenfeldLecturesPhaseTransitions2018}.
 Si bien el modelo de Ising en dos dimensiones fue resuelto en este límite por Onsager \cite{Onsager1944}, la gran mayoría de los sistemas físicos no son tratables analíticamente, y por lo tanto se hace necesario recurrir a métodos numéricos para estudiar sus propiedades.
 
@@ -129,7 +129,7 @@ En una dimensión este modelo es exactamente soluble, y la evolución de $\expva
 \label{sec:autocorrelacion}
 Como las configuraciones sucesivas de la cadena de Markov están correlacionadas, antes de las corridas de producción se estimó el tiempo de autocorrelación integrado $\tau_\mathrm{int}$ de $|m|$ y de $e$ en función de $T$ para cada tamaño, con el método de ventana autoconsistente de Sokal \cite{landauGuideMonteCarlo2020}.
 Para ello se generaron series preliminares de entre $5 \times 10^5$ y $2 \times 10^7$ MCS, según el tamaño, partiendo de una configuración ordenada.
-Como se observa en la Fig.~\ref{fig:decorrelacion}, $\tau_\mathrm{int}$ medido para el caso $L=64$ presenta un máximo cerca de $\Tc$ que crece rápidamente con $L$ (desde $\sim 60$ MCS para $L = 16$ hasta $\sim 1.4 \times 10^4$ MCS para $L = 200$): es el efecto de  \textit{critical slowing down}, del cual hemos hecho un análisis en el Apéndice~\ref{app:z}.
+Como se observa en la Fig.~\ref{fig:decorrelacion}, $\tau_\mathrm{int}$ medido para el caso $L=64$ presenta un máximo cerca de $\Tc$ que crece rápidamente con $L$ . Este es un efecto conocido como  \textit{critical slowing down}, del cual hemos hecho un comentario en el Apéndice~\ref{app:z}.
 
 Estos valores se usaron únicamente para fijar el protocolo de simulación.
 Para cada $T$ se interpoló $\tau(T)$ y se tomaron $10\tau$ MCS de termalización y una separación de $2.5\tau$ MCS entre muestras, acumulando entre 5000 y 7500 muestras por temperatura.
@@ -292,82 +292,167 @@ El corrimiento de $T^*(L)$ respecto de $\Tc$ es notable para los tamaños chicos
 
 \subsection{Exponentes críticos}
 \label{sec:exponentes}
-\todo{Ítem (e).}
+Con el valor de $\Tc$ obtenido del cruce de Binder, los exponentes pueden estimarse a partir del escalamiento con $L$ de cantidades evaluadas en la temperatura crítica.
+Según la teoría de escala de tamaño finito,
+\begin{equation}
+  \expval{|m|}(\Tc) \sim L^{-\beta/\nu}, \qquad
+  \left|\frac{dU_L}{dT}\right|_{\Tc} \sim L^{1/\nu}, \qquad
+  \chi'(\Tc) \sim L^{\gamma/\nu} ,
+  \label{eq:fss_Tc}
+\end{equation}
+donde la segunda relación se sigue de que $U_L$ depende de $T$ solo a través de $(T - \Tc) L^{1/\nu}$.
 
-\begin{figure}[htbp]
+Los ajustes de ley de potencia (Fig.~\ref{fig:exponentes}) dan $\beta/\nu = 0.1257(34)$ y $1/\nu = 0.977(16)$, compatibles con los valores exactos $1/8$ y $1$.
+Para $\nu$ contamos además con dos estimaciones independientes: el corrimiento del máximo de $\chi'$, $T^*(L) - \Tc \sim L^{-1/\nu}$, da $1/\nu = 1.002(18)$(Fig.~\ref{fig:exponentes}c), y el ancho del pico en función de $L$ da $1.031(12)$.
+Como valor principal tomamos el de $dU_L/dT$, que no depende del espaciado de la grilla de temperaturas.
+Para $\gamma/\nu$, tanto la altura del pico como el valor en $\Tc$ (Fig.~\ref{fig:exponentes}d) dan resultados compatibles con $7/4$: $1.7557(65)$ y $1.7607(46)$, respectivamente.
+Las dos curvas difieren solo en un factor constante.
+
+A partir de $\beta/\nu$, $\gamma/\nu$ (del máximo de $\chi'$) y $1/\nu$ (de $dU_L/dT$), el resto de los exponentes se obtiene mediante las relaciones de escala.
+Los resultados se resumen en la Tabla~\ref{tab:exponentes}.
+Como verificación adicional, la relación de hiperescala $2\beta/\nu + \gamma/\nu = d$ da $2.007 \pm 0.010$.
+
+\begin{figure}[ht]
   \centering
-  \includegraphics[width=\textwidth]{critical_exponents_fss.png}
-  \caption{\todo{Ajustes de FSS en $\Tc$.}}
+  \includegraphics[width=\textwidth]{critical_exponents_fss}
+  \caption{Escalamiento de tamaño finito en la temperatura crítica, con $\Tc$ el valor de cruce del cumulante de Binder, en escala logarítmica.
+  (a) $\expval{|m|}(\Tc) \propto L^{-\beta/\nu}$.
+  (b) $|dU_L/dT|(\Tc) \propto L^{1/\nu}$.
+  (c) Corrimiento del máximo de la susceptibilidad, $T^*(L) - \Tc \propto L^{-1/\nu}$.
+  (d) $\chi'_\mathrm{max}$ (negro) y $\chi'(\Tc)$ (naranja), ambos $\propto L^{\gamma/\nu}$.
+  Las rectas son los ajustes de ley de potencia; se indica el exponente obtenido.}
   \label{fig:exponentes}
 \end{figure}
 
 \begin{table}[htbp]
   \centering
-  \caption{\todo{Exponentes críticos estimados y exactos.}}
+  \caption{Exponentes críticos obtenidos a partir de $\beta/\nu$, $\gamma/\nu$ y $1/\nu$ mediante las relaciones de escala, comparados con los valores exactos.}
   \label{tab:exponentes}
   \begin{tabular}{lccc}
     \toprule
     Exponente & Relación & Estimado & Exacto \\
     \midrule
-    $\nu$    & FSS de $dU_L/dT$          & \todo{} & $1$ \\
-    $\beta$  & $\nu \cdot (\beta/\nu)$   & \todo{} & $1/8$ \\
-    $\gamma$ & $\nu \cdot (\gamma/\nu)$  & \todo{} & $7/4$ \\
-    $\alpha$ & $2 - d\nu$                & \todo{} & $0$ (log) \\
-    $\eta$   & $2 - \gamma/\nu$          & \todo{} & $1/4$ \\
-    $\delta$ & $1 + \gamma/\beta$        & \todo{} & $15$ \\
+    $\nu$    & FSS de $dU_L/dT$          & $1.024(17)$  & $1$ \\
+    $\beta$  & $\nu \cdot (\beta/\nu)$   & $0.129(4)$   & $1/8$ \\
+    $\gamma$ & $\nu \cdot (\gamma/\nu)$  & $1.80(3)$    & $7/4$ \\
+    $\alpha$ & $2 - d\nu$                & $-0.05(3)$   & $0$ (log) \\
+    $\eta$   & $2 - \gamma/\nu$          & $0.244(7)$   & $1/4$ \\
+    $\delta$ & $1 + \gamma/\beta$        & $15.0(4)$    & $15$ \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \subsection{Magnetización en función del campo}
 \label{sec:campo}
-\todo{Ítem (f): curvas $m(B)$, exponente $\delta$ y colapso $m/|t|^\beta$ vs $B/|t|^\Delta$.}
+Para estudiar el comportamiento con campo realizamos simulaciones con $L = 200$ en $11$ temperaturas $T = \Tc(1 + t)$, con $t \in \{0, \pm 0.01, \pm 0.02, \pm 0.05, \pm 0.1, \pm 0.2\}$ siendo $\Tc$ el valor obtenido mediante el cruce de las curvas del cumulante de Binder, y $21$ valores de campo entre $B = 10^{-3}$ y $5$, espaciados logarítmicamente.
+El protocolo de muestreo es el de la Sección~\ref{sec:autocorrelacion}, pero, como no había un estudio previo de decorrelación con campo, $\tau$ se estimó en cada punto con una corrida piloto.
+Como el campo fija el signo de la magnetización, el parámetro de orden pasa a ser directamente $\expval{m}$.
+En cuanto a efectos de tamaño finito, una corrida igual a la reportada pero para $L=128$ da resultados muy cercanos a los de $L=200$, por lo que se puede considerar que no se observan efectos de tamaño finito apreciables en este rango de campos y temperaturas.
 
-\begin{figure}[htbp]
+La Fig.~\ref{fig:campo} muestra las curvas $m(B)$.
+Por debajo de $\Tc$ la magnetización tiende a un valor finito para $B \to 0$, la magnetización espontánea, mientras que por encima de $\Tc$ se anula linealmente con el campo, $m \simeq \chi B$.
+En $\Tc$ la respuesta es singular, $m \sim B^{1/\delta}$, y es la curva que separa ambos comportamientos.
+
+Las curvas de la Fig.~\ref{fig:campo} son de equilibrio: cada punto se termalizó por separado, por lo que $m(B)$ es una función univaluada e impar del campo.
+Si en cambio el campo se barre a velocidad finita, por debajo de $\Tc$ el sistema permanece en la fase metaestable después de que el campo cambia de signo, hasta que nuclea la fase estable, y $m(B)$ describe un ciclo de histéresis.
+Simulamos estos ciclos para $L = 64$, con resultados que presentamos en el Apéndice~\ref{app:material} (Fig.~\ref{fig:histeresis}).
+
+Para estimar $\delta$ ajustamos $\ln m = \ln A + \delta^{-1} \ln B$ a la curva de $t = 0$ (Fig.~\ref{fig:delta}a).
+La pendiente local $d\ln m/d\ln B$ (Fig.~\ref{fig:delta}b) es constante hasta $B \approx 0.02$ y decrece para campos mayores, donde aparecen correcciones a la ley de potencia y la magnetización se aproxima a la saturación.
+Restringiendo el ajuste a $10^{-3} \leq B \leq 0.022$ obtenemos
+\begin{equation}
+  \delta = 15.05 \pm 0.19 ,
+\end{equation}
+en acuerdo con el valor exacto $15$ y con el obtenido por la relación de Widom en la Sección~\ref{sec:exponentes}, $\delta = 14.97 \pm 0.39$.
+El error combina el del ajuste ($0.06$), la incerteza de $\Tc$ ($0.14$) y la variación con la ventana de ajuste ($0.11$); incluir campos $B \gtrsim 0.05$ sesga el resultado hacia valores de $\delta \approx 15.4$--$15.8$.
+
+Por último, la hipótesis de escala predice que la magnetización cerca de $\Tc$ toma la forma
+\begin{equation}
+  m(t, B) = |t|^{\beta}\, \mathcal{F}_\pm\!\left( \frac{B}{|t|^{\Delta}} \right), \qquad \Delta = \beta\delta ,
+  \label{eq:escala_campo}
+\end{equation}
+con una función de escala para cada signo de $t$.
+Al graficar $m/|t|^{\beta}$ en función de $B/|t|^{\Delta}$ las curvas colapsan en dos ramas (Fig.~\ref{fig:colapso}).
+Sus límites reproducen el comportamiento de la Fig.~\ref{fig:campo}: para $x = B/|t|^\Delta \to 0$, $\mathcal{F}_-$ tiende a una constante (la magnetización espontánea, $m \propto |t|^\beta$) y $\mathcal{F}_+ \propto x$, lo que da $m \propto |t|^{\beta - \Delta} B$, es decir, $\chi \propto |t|^{-\gamma}$ con $\gamma = \beta(\delta - 1)$; para $x \to \infty$, ambas ramas se unen en $\mathcal{F}_\pm \simeq A\, x^{1/\delta}$, que recupera $m \propto B^{1/\delta}$ en $\Tc$.
+El colapso obtenido es de buena calidad, tanto para los exponentes exactos como para los estimados.
+\begin{figure}[!]
   \centering
   \includegraphics[width=\textwidth]{field_magnetization_curves}
-  \caption{\todo{$m(B/J)$ para distintas temperaturas.}}
+  \caption{Magnetización en función del campo para $L = 200$ y distintas temperaturas reducidas $t = T/\Tc - 1$; en negro, $t = 0$.
+  (a) En escala logarítmica en $B$.
+  (b) En escala lineal; la rama $B < 0$ se obtiene por simetría, $m(-B) = -m(B)$, y no fue simulada.}
   \label{fig:campo}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[!]
   \centering
   \includegraphics[width=\textwidth]{field_delta}
-  \caption{\todo{Estimación de $\delta$ en $\Tc$.}}
+  \caption{Exponente $\delta$ a partir de $m(B)$ en $\Tc$, para $L = 200$.
+  (a) $m(B, \Tc)$ en escala logarítmica, con el ajuste $m \propto B^{1/\delta}$ en $10^{-3} \leq B \leq 0.022$ (rojo) y la pendiente exacta $1/15$ (gris).
+  (b) Pendiente local $d\ln m/d\ln B$ entre campos consecutivos; la línea roja es el valor ajustado, la gris a trazos el exacto, y la vertical punteada marca el límite de la ventana de ajuste.}
   \label{fig:delta}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[!]
   \centering
   \includegraphics[width=\textwidth]{field_scaling_collapse}
-  \caption{\todo{Colapso con exponentes exactos y estimados.}}
+  \caption{Colapso de las curvas de magnetización según la forma de escala~\eqref{eq:escala_campo}, para $T < \Tc$ (círculos) y $T > \Tc$ (triángulos).
+  (a) Con los exponentes exactos, $\beta = 1/8$ y $\delta = 15$.
+  (b) Con los exponentes estimados, $\beta = 0.129$ (Sección~\ref{sec:exponentes}) y $\delta = 15.05$.
+  La línea a trazos es el comportamiento asintótico $A\, x^{1/\delta}$, con $A$ obtenido del ajuste en $\Tc$.}
   \label{fig:colapso}
 \end{figure}
 
 \subsection{Calor específico}
 \label{sec:cv}
-\todo{Ítem (g): $\max C \sim L^{\alpha/\nu}$ frente a divergencia logarítmica.}
+Siguiendo el mismo razonamiento que para la susceptibilidad, la teoría de escala de tamaño finito predice que la altura del pico del calor específico crece como $C_\mathrm{max} \sim L^{\alpha/\nu}$.
+Un ajuste de ley de potencia a nuestros datos da $\alpha/\nu = 0.24 \pm 0.01$, lo que con $\nu \simeq 1$ implicaría $\alpha \approx 0.24$.
+Este valor es incompatible con el obtenido a partir de la relación de hiperescala en la Sección~\ref{sec:exponentes}, $\alpha = 2 - d\nu = -0.05 \pm 0.03$, y con el valor exacto $\alpha = 0$.
 
-\begin{figure}[htbp]
+Lo que en realidad ocurre es que en el modelo de Ising bidimensional $C$ no diverge como una potencia, sino logarítmicamente, $C \sim \ln|1 - T/\Tc|$.
+En una red finita la divergencia se corta en $|1 - T/\Tc| \sim L^{-1/\nu}$, de modo que, con $\nu = 1$,
+\begin{equation}
+  C_\mathrm{max} \simeq A + B \ln L , \qquad B = \frac{8}{\pi} K_c^2 \simeq 0.4945 .
+  \label{eq:cv_log}
+\end{equation}
+El valor de $B$ se obtiene a partir de la expresión exacta de Onsager para el calor específico, y coincide con el obtenido por Ferdinand y Fisher \cite{ferdinandBoundedInhomogeneousIsing1969} mediante un análisis de tamaño finito.
+Los datos siguen esta forma (Fig.~\ref{fig:cv}a), con $B = 0.518 \pm 0.006$ y un residuo cuadrático medio cuatro veces menor que el del ajuste de ley de potencia ($0.010$ frente a $0.039$).
+La pendiente obtenida es un $5\%$ mayor que la exacta, diferencia que atribuimos a correcciones de tamaño finito al comportamiento logarítmico, apreciables en el rango de tamaños estudiado.
+
+El exponente aparente $\alpha/\nu$ es entonces un artefacto de ajustar una ley de potencia a un logaritmo.
+Para verlo, calculamos el exponente efectivo entre tamaños consecutivos, $(\alpha/\nu)_\mathrm{ef} = \ln(C_\mathrm{max}^{(L')}/C_\mathrm{max}^{(L)}) / \ln(L'/L)$ (Fig.~\ref{fig:cv}b).
+En lugar de ser constante, como correspondería a una ley de potencia, decrece con el tamaño, de $0.31$ para el par $(16, 32)$ a $0.21$ para $(128, 200)$, y sigue la predicción para un logaritmo puro, $(\alpha/\nu)_\mathrm{ef} \simeq B/C_\mathrm{max}$, que tiende a cero para $L \to \infty$.
+Concluimos que nuestros datos son consistentes con $\alpha = 0$ y con la divergencia logarítmica de Onsager.
+
+\begin{figure}[!]
   \centering
-  \includegraphics[width=\textwidth]{specific_heat_scaling.png}
-  \caption{\todo{Crecimiento de $C_\mathrm{max}$ con $L$.}}
+  \includegraphics[width=\textwidth]{specific_heat_scaling}
+  \caption{Escalamiento del máximo del calor específico.
+  (a) $C_\mathrm{max}$ en función de $\ln L$, con el ajuste $A + B\ln L$ (línea llena) y una recta con la pendiente exacta $B = (8/\pi)K_c^2$ (línea a trazos), desplazada para comparar.
+  (b) Exponente efectivo $(\alpha/\nu)_\mathrm{ef}$ calculado entre pares de tamaños consecutivos, comparado con el valor del ajuste global de ley de potencia (línea llena) y con la predicción $B/C_\mathrm{max}$ para una divergencia logarítmica pura (línea a trazos).}
   \label{fig:cv}
 \end{figure}
 
 \subsection{Resumen de las estimaciones de $\Tc$}
+\label{sec:resumen_Tc}
+La Tabla~\ref{tab:Tc} reúne las tres estimaciones de la temperatura crítica.
+Las tres son compatibles con el valor exacto dentro de un error estándar, pero difieren en precisión y en las hipótesis que requieren.
+Las basadas en el punto de inflexión de $\expval{|m|}$ y en el máximo de $\chi'$ dependen de una extrapolación $L \to \infty$ que supone $\nu = 1$, y la primera está dominada por la incerteza sistemática asociada a la forma de la curva.
+El cruce del cumulante de Binder, en cambio, no requiere extrapolar ni conocer $\nu$, y da el resultado más preciso: su error es unas tres veces menor que el de $T^*(L)$ y diez veces menor que el de la inflexión.
+Por eso es el valor que usamos como referencia en las Secciones~\ref{sec:exponentes} y~\ref{sec:campo}.
+
 \begin{table}[htbp]
   \centering
-  \caption{\todo{Estimaciones de la temperatura crítica.}}
+  \caption{Estimaciones de la temperatura crítica y su desvío respecto del valor exacto, en unidades del error. Para la inflexión y el cruce de Binder, el error combina el estadístico y el sistemático.}
   \label{tab:Tc}
   \begin{tabular}{lc}
     \toprule
     Método & $\Tc$ \\
     \midrule
-    Inflexión de $\expval{|m|}$             & \todo{} \\
-    Cruce de Binder                        & \todo{} \\
-    Máximo de $\chi$, $T^*(L) \to \Tc$     & \todo{} \\
-    Exacto (Onsager)                       & $2/\ln(1+\sqrt{2}) = 2.269185\ldots$ \\
+    Inflexión de $\expval{|m|}$, $T_\mathrm{infl}(L) \to \Tc$  & $2.2712(4)$   \\
+    Máximo de $\chi'$, $T^*(L) \to \Tc$                         & $2.2701(11)$   \\
+    Cruce de Binder                                            & $2.2693(4)$  \\
+    Exacto (Onsager)                                           & $2/\ln(1+\sqrt{2}) = 2.269185\ldots$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -375,8 +460,22 @@ El corrimiento de $T^*(L)$ respecto de $\Tc$ es notable para los tamaños chicos
 % =========================================================================
 \section{Conclusiones}
 % =========================================================================
-\todo{}
+Estudiamos el modelo de Ising en la red cuadrada mediante simulaciones de Monte Carlo con dinámica de baño térmico, para tamaños entre $L = 16$ y $200$.
+Un estudio preliminar de los tiempos de autocorrelación permitió fijar, para cada tamaño y temperatura, la termalización y la separación entre muestras.
+La comparación con la solución exacta lejos de $\Tc$, con desvíos compatibles con los errores estadísticos, valida tanto el algoritmo como este protocolo.
 
+Cerca de la transición, el análisis de tamaño finito permitió extraer las propiedades críticas del límite termodinámico a partir de sistemas finitos.
+El cruce del cumulante de Binder dio $\Tc = 2.2693(4)$, y las estimaciones a partir de la inflexión de $\expval{|m|}$ y del máximo de $\chi'$ resultaron compatibles con él.
+Los exponentes obtenidos, $\nu = 1.024(17)$, $\beta = 0.129(4)$, $\gamma = 1.80(3)$ y $\eta = 0.244(7)$, concuerdan con los exactos dentro de $1.6\sigma$, y satisfacen la relación de hiperescala.
+El exponente $\delta$, medido directamente a partir de la magnetización con campo en $\Tc$, dio $15.05(19)$, en acuerdo con el valor exacto y con el obtenido por la relación de Widom.
+Además, las curvas $m(B)$ para distintas temperaturas colapsan según la forma de escala predicha, lo que constituye una verificación de la hipótesis de escala más allá de los exponentes individuales.
+
+El calor específico merece un comentario aparte: un ajuste de ley de potencia a su máximo da un exponente aparente $\alpha/\nu \approx 0.24$, pero los datos se describen mucho mejor por un crecimiento logarítmico, cuya pendiente $B = 0.518(6)$ es cercana a la exacta, $0.4945$.
+Esto enseña que, para distinguir una divergencia logarítmica de una ley de potencia con exponente pequeño, no alcanza con un ajuste global y hace falta analizar la tendencia de los exponentes efectivos con el tamaño.
+Por último, los mismos tiempos de autocorrelación del estudio preliminar dieron el exponente dinámico $z = 2.16(2)$, compatible con el valor de referencia para dinámicas locales sin conservación.
+
+La principal limitación del trabajo es que no se guardaron las series de muestras, por lo que $\chi'$, $C$ y $U_L$ no tienen error por punto y las incertezas de las cantidades derivadas de ellos se estimaron a partir de los residuos de los ajustes.
+Esto hubiera sido particularmente importante para el ajuste de la divergencia del calor específico.
 % =========================================================================
 \printbibliography
 
@@ -392,7 +491,7 @@ Variando la ventana de ajuste y el grado del polinomio, o descartando los tamañ
 
 Adicionalmente, se midió la autocorrelación de la energía. Se observa que su tiempo de autocorrelación característico crece con un exponente efectivo menor ($1.74 \pm 0.01$), indicando una relajación más rápida que la de la magnetización.
 
-\begin{figure}[htbp]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{dynamic_exponent_z.pdf}
   \caption{Izq: Colapso de $\tau_\mathrm{int}(|m|)/L^{z}$ en función de $(T - \Tc)L$. Der: $\tau_\mathrm{int}$ evaluado en $\Tc$ para $|m|$ y $e$, con ajustes de ley de potencia; en ambos casos, se indica el exponente obtenido.}
@@ -466,13 +565,29 @@ Con $\dfrac{\partial \beta}{\partial T} = -\dfrac{1}{T^2} = -\beta^2$:
 \label{app:material}
 En la Fig.~\ref{fig:observables_zoom} se amplía la región crítica y se muestran los momentos $\expval{m^2}$ y $\expval{m^4}$, que por debajo de $\Tc$ tienden a $m_0^2$ y $m_0^4$, con $m_0$ la magnetización espontánea exacta, y por encima de $\Tc$ permanecen finitos en la red finita.
 
-\begin{figure}[htbp]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{observables_near_Tc.pdf}
   \caption{Ampliación de la región crítica, $2.1 \leq T \leq 2.5$, para los mismos tamaños de la Fig.~\ref{fig:observables}: (a) $\expval{|m|}$, (b) $C$, (c) $\expval{m^2}$ y (d) $\expval{m^4}$.
 La línea a trazos es la solución exacta para $L \to \infty$: $m_0$ de Yang en (a), $m_0^2$ en (c), $m_0^4$ en (d), y el calor específico de Onsager en (b).
 La línea punteada vertical indica $\Tc$.}
   \label{fig:observables_zoom}
+\end{figure}
+
+Para completar el estudio con campo simulamos ciclos de histéresis con $L = 64$, partiendo de la red saturada y barriendo el campo linealmente entre $B = 1.5$ y $-1.5$ y de vuelta, en $300$ pasos por rama y $10$ MCS por paso, es decir, a una velocidad $|dB/dt| \simeq 10^{-3}$ por MCS.
+Descartamos el primer ciclo y promediamos $m(B)$ sobre los cinco siguientes.
+Por debajo de $\Tc$ el ciclo es ancho y casi rectangular (Fig.~\ref{fig:histeresis}): la magnetización se mantiene cerca de su valor de saturación aun para campos opuestos, hasta que se forma un núcleo crítico de la fase estable y $m$ se invierte bruscamente.
+El campo coercitivo, en el que cada rama cruza $m = 0$ (triángulos), decrece al aumentar la temperatura, desde $B_c \simeq 0.45$ en $T = 1.5$ hasta $0.12$ en $T \approx \Tc$, y con él se achica el ciclo, porque las fluctuaciones térmicas facilitan la nucleación.
+Por encima de $\Tc$ ($T = 2.6$) el ciclo no desaparece del todo: esta histéresis residual es dinámica, ya que el sistema no llega a relajar en el tiempo que el campo permanece en cada valor, y esperamos que se cierre al disminuir la velocidad de barrido.
+Cabe destacar que $B_c$ no es una propiedad de equilibrio: depende de la velocidad de barrido y del tamaño del sistema, que controlan la probabilidad de nucleación.
+En equilibrio, para $T < \Tc$, $m(B)$ presenta un salto discontinuo en $B = 0$, la transición de primer orden en el campo.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{hysteresis_loops}
+ \caption{Ciclos de histéresis para $L = 64$, con un barrido lineal del campo a $| dB/dt| \simeq 10^{-3}$ por MCS, promediados sobre cinco ciclos.
+  Las líneas llenas y los triángulos hacia la izquierda corresponden a la rama con campo decreciente; las líneas a trazos y los triángulos hacia la derecha, a la rama con campo creciente.}
+  \label{fig:histeresis}
 \end{figure}
 
 \end{document}
